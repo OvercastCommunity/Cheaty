@@ -38,3 +38,12 @@ prefix:
   matrix: ":warning: "
   command: ""
   
+# Morpheus - Enables clickable and visually enhanced notifications for matric violations.
+morpheus:
+  enabled: true
+  # Permission node requred for viewing altered notifications
+  permission-node: matrix.notify
+  # Alert prefix used to format notifications
+  alert-prefix: "&f[&6AC&f]"
+  
+  

@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tc.oc.occ</groupId>
     <artifactId>Cheaty</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
-    <name>Bolty</name>
+    <version>1.2.0-SNAPSHOT</version>
+    <name>Cheaty</name>
     <description>A minecraft to discord java plugin for anti-cheat logging</description>
 
 
@@ -69,14 +69,6 @@
             <version>2.6.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Morpheus - https://github.com/OvercastCommunity/Morpheus -->
-        <dependency>
-            <groupId>oc.tc</groupId>
-            <artifactId>Morpheus</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -126,23 +118,23 @@
                     <relocations>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>tc.oc.occ.bolt.lib.acf</shadedPattern>
+                            <shadedPattern>tc.oc.occ.cheaty.lib.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.logging.log4j</pattern>
-                            <shadedPattern>tc.oc.occ.bolt.lib.logger</shadedPattern>
+                            <shadedPattern>tc.oc.occ.cheaty.lib.logger</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>okhttp3</pattern>
-                            <shadedPattern>tc.oc.occ.bolt.lib.okhttp3</shadedPattern>
+                            <shadedPattern>tc.oc.occ.cheaty.lib.okhttp3</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>okio</pattern>
-                            <shadedPattern>tc.oc.occ.bolt.lib.okio</shadedPattern>
+                            <shadedPattern>tc.oc.occ.cheaty.lib.okio</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.fasterxml</pattern>
-                            <shadedPattern>tc.oc.occ.bolt.lib.jackson</shadedPattern>
+                            <shadedPattern>tc.oc.occ.cheaty.lib.jackson</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

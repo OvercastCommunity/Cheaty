@@ -1,5 +1,7 @@
 package tc.oc.occ.cheaty;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.Configuration;
 
 public class BotConfig {
@@ -24,6 +26,10 @@ public class BotConfig {
 
   private String reportChannel;
   private String cheatChannel;
+
+  private boolean morpheusEnabled;
+  private String morpheusPermission;
+  private Component morpheusPrefix;
 
   public BotConfig(Configuration config) {
     reload(config);
@@ -51,6 +57,12 @@ public class BotConfig {
 
     this.reportChannel = config.getString("channels.reports");
     this.cheatChannel = config.getString("channels.anticheat");
+
+    this.morpheusEnabled = config.getBoolean("morpheus.enabled");
+    this.morpheusPermission = config.getString("morpheus.permission-node");
+    this.morpheusPrefix =
+        LegacyComponentSerializer.legacyAmpersand()
+            .deserialize(config.getString("morpheus.alert-prefix"));
   }
 
   public boolean isEnabled() {
@@ -111,5 +123,17 @@ public class BotConfig {
 
   public String getAntiCheatChannel() {
     return cheatChannel;
+  }
+
+  public boolean isMorpheusEnabled() {
+    return morpheusEnabled;
+  }
+
+  public String getMorpheusPermission() {
+    return morpheusPermission;
+  }
+
+  public Component getMorpheusPrefix() {
+    return morpheusPrefix;
   }
 }
