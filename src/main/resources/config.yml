@@ -4,7 +4,13 @@ token: "" # Discord bot token
 server: "" # ID of discord server
 
 # Minecraft server display-name
-server-name: "occ" # Server name
+server-name: "" # Server name
+
+# Permission used to identify staff members
+staff-permission: "cheaty.staff"
+
+# Permission used to identify off-duty staff members
+off-duty-permission: "cheaty.off-duty"
 
 channels:
   reports: "" # ID of channel where reports are sent
@@ -22,7 +28,7 @@ types:
 # %reporter% - Player who issued report
 # %reported% - Player who has been reported
 # %reason%   - Reason for report
-report-format: "[%server%] **%reporter% reported %reported%: %reason%**"
+report-format: "[%server%] **`%reporter%` reported `%reported%`: %reason%**"
 
 # Relay - Command based (Used for AutoKiller and via /relay)
 #
@@ -46,4 +52,15 @@ morpheus:
   # Alert prefix used to format notifications
   alert-prefix: "&f[&6AC&f]"
   
-  
+# Pings
+pings:
+  enabled: true
+  # The number of unique reports required within the report window to trigger a ping
+  report-threshold: 3
+  # The time period during which reports will be counted
+  report-window: 30 # Minutes
+  # The time period in minutes after which staff should be considered idle
+  staff-idle-time: 10 # Minutes
+  # The roles to be pinged when the report threshold is reached
+  discord-roles:
+    - "" # <use discord group ids>

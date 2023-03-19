@@ -1,5 +1,6 @@
 package tc.oc.occ.cheaty;
 
+import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.Configuration;
@@ -30,6 +31,15 @@ public class BotConfig {
   private boolean morpheusEnabled;
   private String morpheusPermission;
   private Component morpheusPrefix;
+
+  private boolean pingsEnabled;
+  private int reportThreshold;
+  private int reportWindow;
+  private int staffIdleTime;
+  private List<String> pingDiscordRoles;
+
+  private String staffPermissionNode;
+  private String offDutyPermissionNode;
 
   public BotConfig(Configuration config) {
     reload(config);
@@ -63,6 +73,14 @@ public class BotConfig {
     this.morpheusPrefix =
         LegacyComponentSerializer.legacyAmpersand()
             .deserialize(config.getString("morpheus.alert-prefix"));
+
+    this.pingsEnabled = config.getBoolean("pings.enabled");
+    this.reportThreshold = config.getInt("pings.report-threshold");
+    this.reportWindow = config.getInt("pings.report-window");
+    this.staffIdleTime = config.getInt("pings.staff-idle-time");
+    this.pingDiscordRoles = config.getStringList("pings.discord-roles");
+    this.staffPermissionNode = config.getString("staff-permission");
+    this.offDutyPermissionNode = config.getString("off-duty-permission");
   }
 
   public boolean isEnabled() {
@@ -135,5 +153,33 @@ public class BotConfig {
 
   public Component getMorpheusPrefix() {
     return morpheusPrefix;
+  }
+
+  public boolean isPingEnabled() {
+    return pingsEnabled;
+  }
+
+  public int getReportThreshold() {
+    return reportThreshold;
+  }
+
+  public int getReportWindowMinutes() {
+    return reportWindow;
+  }
+
+  public int getStaffIdleMinutes() {
+    return staffIdleTime;
+  }
+
+  public List<String> getDiscordPingRoles() {
+    return pingDiscordRoles;
+  }
+
+  public String getStaffPermission() {
+    return staffPermissionNode;
+  }
+
+  public String getOffDutyPermission() {
+    return offDutyPermissionNode;
   }
 }
