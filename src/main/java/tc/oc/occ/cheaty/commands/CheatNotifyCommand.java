@@ -7,6 +7,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Dependency;
+import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -26,12 +27,13 @@ import tc.oc.pgm.util.Audience;
 import tc.oc.pgm.util.named.NameStyle;
 import tc.oc.pgm.util.text.TextTranslations;
 
+@CommandAlias("cheaty")
 public class CheatNotifyCommand extends BaseCommand {
 
   @Dependency private BotConfig config;
   @Dependency private DiscordBot bot;
 
-  @CommandAlias("cheaty notify")
+  @Subcommand("notify")
   @Syntax("[player] [message]")
   @CommandPermission("cheaty.notify")
   public void notify(CommandSender sender, String target, String message) {
