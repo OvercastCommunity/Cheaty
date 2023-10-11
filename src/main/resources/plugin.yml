@@ -3,4 +3,4 @@ main: tc.oc.occ.cheaty.Cheaty
 description: A minecraft to discord bot
 version: ${project.version}
 author: applenick
-softdepend: [PGM, AutoKiller, Idly]
+softdepend: [PGM, AutoKiller, Idly, GrimAC]

@@ -10,6 +10,10 @@
     <!-- Repository Locations -->
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>pgm-repo-snapshots</id>
             <url>https://repo.pgm.fyi/snapshots</url>
         </repository>
@@ -58,6 +62,18 @@
             <groupId>dev.pgm</groupId>
             <artifactId>Community</artifactId>
             <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MWHunter</groupId>
+            <artifactId>GrimAPI</artifactId>
+            <version>c3a80bd</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ac.grim.grimac</groupId>
+            <artifactId>grimac</artifactId>
+            <version>2.3.45</version>
             <scope>provided</scope>
         </dependency>
 
