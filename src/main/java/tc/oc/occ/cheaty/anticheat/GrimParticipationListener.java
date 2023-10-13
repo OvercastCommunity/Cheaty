@@ -41,12 +41,18 @@ public class GrimParticipationListener implements Listener {
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onParticipantSpawn(ParticipantSpawnEvent event) {
-    grimManager.setPlayerBypass(event.getPlayer().getBukkit(), false);
+    Player bukkitPlayer = event.getPlayer().getBukkit();
+    if (bukkitPlayer == null) return;
+
+    grimManager.setPlayerBypass(bukkitPlayer, false);
   }
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onParticipantDespawn(ParticipantDespawnEvent event) {
-    grimManager.setPlayerBypass(event.getPlayer().getBukkit(), true);
+    Player bukkitPlayer = event.getPlayer().getBukkit();
+    if (bukkitPlayer == null) return;
+
+    grimManager.setPlayerBypass(bukkitPlayer, true);
   }
 
   public static class ResolverTask extends BukkitRunnable {
