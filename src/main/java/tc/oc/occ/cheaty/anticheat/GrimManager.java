@@ -23,6 +23,7 @@ public class GrimManager {
   }
 
   public boolean setPlayerBypass(Player player, boolean shouldBypass) {
+    if (player == null) return false;
     GrimUser grimUser = api.getGrimUser(player);
     if (!(grimUser instanceof GrimPlayer)) return false;
 
