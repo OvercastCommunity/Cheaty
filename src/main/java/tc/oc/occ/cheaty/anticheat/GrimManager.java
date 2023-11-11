@@ -24,7 +24,16 @@ public class GrimManager {
 
   public boolean setPlayerBypass(Player player, boolean shouldBypass) {
     if (player == null) return false;
-    GrimUser grimUser = api.getGrimUser(player);
+
+    // Grim can internally throw an NPE when getting a player that is being removed
+    // This occurs when a player disconnects
+    GrimUser grimUser;
+    try {
+      grimUser = api.getGrimUser(player);
+    } catch (NullPointerException ignored) {
+      return false;
+    }
+
     if (!(grimUser instanceof GrimPlayer)) return false;
 
     GrimPlayer grimPlayer = (GrimPlayer) grimUser;
