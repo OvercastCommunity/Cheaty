@@ -167,7 +167,7 @@ public class DiscordBot {
             + getUsername(report.getTargetId())
             + "` has been reported by **"
             + numReports
-            + " different players"
+            + " different player"
             + (numReports != 1 ? "s" : "")
             + "** within the last "
             + config.getReportWindowMinutes()
