@@ -137,13 +137,23 @@ public class DiscordBot {
 
   public void sendRelay(String message, RelayType type) {
     if (!config.isRelayCommandEnabled()) return;
-    String formatted = config.getRelayFormat().replace("%message%", message);
+    String formatted =
+        config
+            .getRelayFormat()
+            .replace("%message%", message)
+            .replace("_", "\\_")
+            .replace("*", "\\*");
     sendMessage(getPrefix(type) + formatted, false);
   }
 
   public void sendAutoKiller(AutoKillCheatEvent event) {
     if (!config.isAutoKillerEnabled()) return;
-    String formatted = config.getRelayFormat().replace("%message%", event.getAlert());
+    String formatted =
+        config
+            .getRelayFormat()
+            .replace("%message%", event.getAlert())
+            .replace("_", "\\_")
+            .replace("*", "\\*");
     sendMessage(getPrefix(RelayType.AUTOKILL) + formatted, false);
   }
 
