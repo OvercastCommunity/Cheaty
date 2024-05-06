@@ -2,6 +2,8 @@ package tc.oc.occ.cheaty;
 
 import co.aikar.commands.BukkitCommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import tc.oc.occ.cheaty.anticheat.GrimManager;
+import tc.oc.occ.cheaty.anticheat.GrimUtil;
 import tc.oc.occ.cheaty.commands.AdminCommands;
 import tc.oc.occ.cheaty.commands.BotCommands;
 import tc.oc.occ.cheaty.commands.CheatNotifyCommand;
@@ -10,6 +12,7 @@ public class Cheaty extends JavaPlugin {
 
   private DiscordBot bot;
   private BotConfig config;
+  private GrimManager grimManager;
   private BukkitCommandManager commands;
 
   @Override
@@ -19,6 +22,7 @@ public class Cheaty extends JavaPlugin {
 
     this.config = new BotConfig(getConfig());
     this.bot = new DiscordBot(config, getLogger());
+    this.grimManager = GrimUtil.createManager();
 
     this.setupCommands();
     this.registerListeners();
@@ -36,10 +40,14 @@ public class Cheaty extends JavaPlugin {
     commands.registerCommand(new BotCommands());
     commands.registerCommand(new AdminCommands());
     commands.registerCommand(new CheatNotifyCommand());
+
+    GrimUtil.createCommands(grimManager, commands);
   }
 
   private void registerListeners() {
     this.getServer().getPluginManager().registerEvents(new BotListener(bot), this);
+
+    GrimUtil.registerListeners(grimManager, this);
   }
 
   public void reloadBotConfig() {
