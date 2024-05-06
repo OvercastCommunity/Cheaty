@@ -1,7 +1,7 @@
 package tc.oc.occ.cheaty.anticheat;
 
-import ac.grim.grimac.GrimAbstractAPI;
-import ac.grim.grimac.GrimUser;
+import ac.grim.grimac.api.GrimAbstractAPI;
+import ac.grim.grimac.api.GrimUser;
 import ac.grim.grimac.player.GrimPlayer;
 import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
