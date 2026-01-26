@@ -2,92 +2,34 @@ package tc.oc.occ.cheaty;
 
 import dev.pgm.community.assistance.Report;
 import dev.pgm.community.events.PlayerReportEvent;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import net.climaxmc.autokiller.events.AutoKillCheatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.javacord.api.DiscordApi;
-import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.entity.channel.ServerChannel;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.permission.Role;
-import org.javacord.api.entity.server.Server;
 
 public class DiscordBot {
 
-  private DiscordApi api;
+  private final HttpClient httpClient;
   private final BotConfig config;
   private final Logger logger;
   private final PingMonitor pings;
 
   public DiscordBot(BotConfig config, Logger logger) {
+    this.httpClient = HttpClient.newHttpClient();
     this.config = config;
     this.logger = logger;
     this.pings = new PingMonitor(config, this);
-    reload();
   }
 
   public BotConfig getConfig() {
     return config;
-  }
-
-  private void setAPI(DiscordApi api) {
-    this.api = api;
-  }
-
-  public void reload() {
-    if (this.api != null && !config.isEnabled()) {
-      disable();
-    } else if (this.api == null && config.isEnabled()) {
-      enable();
-    }
-  }
-
-  private void enable() {
-    if (config.isEnabled()) {
-      logger.info("Enabling DiscordBot...");
-      new DiscordApiBuilder()
-          .setToken(config.getToken())
-          .setWaitForServersOnStartup(false)
-          .setWaitForUsersOnStartup(false)
-          .login()
-          .thenAcceptAsync(
-              api -> {
-                setAPI(api);
-                api.setMessageCacheSize(1, 60 * 60);
-                api.addServerBecomesAvailableListener(
-                    listener -> {
-                      logger.info(listener.getServer().getName() + " is now available");
-                    });
-                logger.info("Cheaty has connected to Discord!");
-              });
-    }
-  }
-
-  public void disable() {
-    if (this.api != null) {
-      this.api.disconnect();
-    }
-    this.api = null;
-  }
-
-  private Optional<Server> getDiscordServer() {
-    return api.getServerById(config.getDiscordServerId());
-  }
-
-  private Optional<ServerChannel> getChannel(String id) {
-    Server server = getDiscordServer().orElse(null);
-    if (server != null) {
-      return server.getChannelById(id);
-    }
-    return Optional.empty();
   }
 
   private String getUsername(UUID playerId) {
@@ -96,24 +38,49 @@ public class DiscordBot {
   }
 
   private void sendMessage(String message, boolean report) {
-    if (api != null) {
-      api.getServerById(config.getDiscordServerId())
-          .ifPresent(
-              server -> {
-                server
-                    .getChannelById(
-                        report ? config.getReportChannel() : config.getAntiCheatChannel())
-                    .ifPresent(
-                        channel -> {
-                          channel
-                              .asTextChannel()
-                              .ifPresent(
-                                  text -> {
-                                    text.sendMessage(format(message));
-                                  });
-                        });
-              });
+    if (!config.isEnabled()) return;
+
+    String webhookUrl = report ? config.getReportsWebhookUrl() : config.getAnticheatWebhookUrl();
+    if (webhookUrl == null || webhookUrl.isEmpty()) {
+      logger.warning("Webhook URL not configured for " + (report ? "reports" : "anticheat"));
+      return;
     }
+
+    sendWebhook(webhookUrl, format(message));
+  }
+
+  private void sendWebhook(String webhookUrl, String content) {
+    String json = "{\"content\":\"" + escapeJson(content) + "\",\"username\":\"Cheaty\"}";
+
+    HttpRequest request =
+        HttpRequest.newBuilder()
+            .uri(URI.create(webhookUrl))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .build();
+
+    httpClient
+        .sendAsync(request, HttpResponse.BodyHandlers.discarding())
+        .thenAccept(
+            response -> {
+              int statusCode = response.statusCode();
+              if (statusCode != 204 && statusCode != 200) {
+                logger.warning("Webhook failed with code: " + statusCode);
+              }
+            })
+        .exceptionally(
+            e -> {
+              logger.warning("Failed to send webhook: " + e.getMessage());
+              return null;
+            });
+  }
+
+  private String escapeJson(String text) {
+    return text.replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t");
   }
 
   public void sendReport(PlayerReportEvent event) {
@@ -148,29 +115,28 @@ public class DiscordBot {
   }
 
   public void sendReportPing(Report report, int numReports) {
+    if (!config.isEnabled()) return;
+
+    String webhookUrl = config.getReportsWebhookUrl();
+    if (webhookUrl == null || webhookUrl.isEmpty()) {
+      logger.warning("Reports webhook URL not configured");
+      return;
+    }
+
     List<String> pingRoles = config.getDiscordPingRoles();
 
-    Server server = getDiscordServer().orElse(null);
-
-    if (server == null) return;
-
-    // Convert role ids to objects
-    List<Role> discordRoles =
-        pingRoles.stream()
-            .map(
-                roleId -> {
-                  Role role = server.getRoleById(roleId).orElse(null);
-                  if (role == null) {
-                    logger.warning("Could not find role '" + roleId + "'");
-                  }
-                  return role;
-                })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+    // Build role mentions using raw format
+    StringBuilder mentions = new StringBuilder();
+    for (String roleId : pingRoles) {
+      if (roleId != null && !roleId.isEmpty()) {
+        mentions.append("<@&").append(roleId).append("> ");
+      }
+    }
 
     // Format ping message
     String pingMessage =
-        "`"
+        mentions.toString()
+            + "\n`"
             + getUsername(report.getTargetId())
             + "` has been reported by **"
             + numReports
@@ -181,38 +147,24 @@ public class DiscordBot {
             + " minute"
             + (config.getReportWindowMinutes() != 1 ? "s" : "");
 
-    // Send message here
-    TextChannel channel = (TextChannel) api.getChannelById(config.getReportChannel()).orElse(null);
-    if (channel == null) {
-      logger.warning("Could not find report channel (" + config.getReportChannel() + ")");
-      return;
-    }
-
-    MessageBuilder builder = new MessageBuilder();
-    for (Role role : discordRoles) {
-      builder.append(role.getMentionTag());
-    }
-    builder.appendNewLine();
-    builder.append(pingMessage);
-    builder.send(channel);
+    sendWebhook(webhookUrl, pingMessage);
   }
 
   private String format(String text) {
     text = ChatColor.translateAlternateColorCodes('&', text);
     text = ChatColor.stripColor(text);
     text = text.replace("@", "");
+    text = text.replace("_", "\\_");
+    text = text.replace("*", "\\*");
     return text.trim();
   }
 
   public String getPrefix(RelayType type) {
-    switch (type) {
-      case AUTOKILL:
-        return config.getAutoKillPrefix();
-      case MATRIX:
-        return config.getMatrixPrefix();
-      default:
-        return config.getCommandPrefix();
-    }
+    return switch (type) {
+      case AUTOKILL -> config.getAutoKillPrefix();
+      case MATRIX -> config.getMatrixPrefix();
+      default -> config.getCommandPrefix();
+    };
   }
 
   public static enum RelayType {

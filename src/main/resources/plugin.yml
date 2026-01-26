@@ -1,6 +1,6 @@
-name: Cheaty
-main: tc.oc.occ.cheaty.Cheaty
-description: A minecraft to discord bot
+name: ${project.name}
+description: ${project.description}
+main: ${project.bukkit.main}
 version: ${project.version}
-author: applenick
+author: ${project.author}
 softdepend: [PGM, AutoKiller, Idly]

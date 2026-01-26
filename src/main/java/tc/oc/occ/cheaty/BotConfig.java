@@ -9,8 +9,8 @@ public class BotConfig {
 
   private boolean enabled;
 
-  private String discordToken;
-  private String discordServerId;
+  private String reportsWebhookUrl;
+  private String anticheatWebhookUrl;
 
   private String serverName;
 
@@ -25,9 +25,6 @@ public class BotConfig {
   private String autoKillPrefix;
   private String matrixPrefix;
   private String commandPrefix;
-
-  private String reportChannel;
-  private String cheatChannel;
 
   private boolean cheatNotifyEnabled;
   private String cheatNotifyPermission;
@@ -48,8 +45,9 @@ public class BotConfig {
 
   public void reload(Configuration config) {
     this.enabled = config.getBoolean("enabled");
-    this.discordToken = config.getString("token");
-    this.discordServerId = config.getString("server");
+
+    this.reportsWebhookUrl = config.getString("webhooks.reports");
+    this.anticheatWebhookUrl = config.getString("webhooks.anticheat");
 
     String serverEnv = System.getenv("SERVER_NAME");
     this.serverName =
@@ -66,9 +64,6 @@ public class BotConfig {
     this.autoKillPrefix = config.getString("prefix.autokill");
     this.matrixPrefix = config.getString("prefix.matrix");
     this.commandPrefix = config.getString("prefix.command");
-
-    this.reportChannel = config.getString("channels.reports");
-    this.cheatChannel = config.getString("channels.anticheat");
 
     this.cheatNotifyEnabled = config.getBoolean("cheat-notify.enabled");
     this.cheatNotifyPermission = config.getString("cheat-notify.permission-node");
@@ -89,12 +84,12 @@ public class BotConfig {
     return enabled;
   }
 
-  public String getToken() {
-    return discordToken;
+  public String getReportsWebhookUrl() {
+    return reportsWebhookUrl;
   }
 
-  public String getDiscordServerId() {
-    return discordServerId;
+  public String getAnticheatWebhookUrl() {
+    return anticheatWebhookUrl;
   }
 
   public String getServerName() {
@@ -139,14 +134,6 @@ public class BotConfig {
 
   public String getCommandPrefix() {
     return commandPrefix;
-  }
-
-  public String getReportChannel() {
-    return reportChannel;
-  }
-
-  public String getAntiCheatChannel() {
-    return cheatChannel;
   }
 
   public boolean isCheatNotifyEnabled() {

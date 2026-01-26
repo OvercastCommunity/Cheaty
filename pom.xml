@@ -2,10 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tc.oc.occ</groupId>
     <artifactId>Cheaty</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <name>Cheaty</name>
     <description>A minecraft to discord java plugin for anti-cheat logging</description>
 
+    <properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.bukkit.main>tc.oc.occ.cheaty.Cheaty</project.bukkit.main>
+		<project.author>applenick</project.author>
+	</properties>
 
     <!-- Repository Locations -->
     <repositories>
@@ -34,7 +41,7 @@
         <dependency>
             <groupId>co.aikar</groupId>
             <artifactId>acf-bukkit</artifactId>
-            <version>0.5.0-SNAPSHOT</version>
+            <version>0.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>tc.oc.pgm</groupId>
@@ -47,12 +54,6 @@
             <artifactId>util</artifactId>
             <version>0.16-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javacord</groupId>
-            <artifactId>javacord</artifactId>
-            <version>3.6.0</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>dev.pgm</groupId>
@@ -89,10 +90,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
                     <compilerArgs>
                         <arg>-parameters</arg> <!-- Required for aikar/commands to auto generate syntax -->
                     </compilerArgs>
@@ -101,7 +102,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.3</version>
+                <version>3.6.1</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <minimizeJar>true</minimizeJar>
@@ -129,18 +130,6 @@
                             <pattern>org.apache.logging.log4j</pattern>
                             <shadedPattern>tc.oc.occ.cheaty.lib.logger</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>okhttp3</pattern>
-                            <shadedPattern>tc.oc.occ.cheaty.lib.okhttp3</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>okio</pattern>
-                            <shadedPattern>tc.oc.occ.cheaty.lib.okio</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.fasterxml</pattern>
-                            <shadedPattern>tc.oc.occ.cheaty.lib.jackson</shadedPattern>
-                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -154,28 +143,21 @@
             </plugin>
 
             <!-- Validates that code is properly formatted with Google's code style -->
-            <plugin>
-                <groupId>com.coveo</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <style>google</style>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+          	<plugin>
+				<groupId>com.spotify.fmt</groupId>
+				<artifactId>fmt-maven-plugin</artifactId>
+				<version>2.27</version>
+				<configuration>
+					<style>google</style>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
-
-    <!-- Special Properties -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipTests>true</skipTests>
-    </properties>
-
 </project>

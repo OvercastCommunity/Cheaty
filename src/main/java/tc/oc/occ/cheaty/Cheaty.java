@@ -24,11 +24,6 @@ public class Cheaty extends JavaPlugin {
     this.registerListeners();
   }
 
-  @Override
-  public void onDisable() {
-    this.bot.disable();
-  }
-
   public void setupCommands() {
     this.commands = new BukkitCommandManager(this);
     commands.registerDependency(DiscordBot.class, bot);
@@ -45,6 +40,5 @@ public class Cheaty extends JavaPlugin {
   public void reloadBotConfig() {
     this.reloadConfig();
     config.reload(getConfig());
-    bot.reload();
   }
 }

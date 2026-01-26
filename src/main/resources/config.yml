@@ -1,7 +1,10 @@
 # Discord Stuff
-enabled: true # Enable discord bot?
-token: "" # Discord bot token
-server: "" # ID of discord server
+enabled: true # Enable discord integration?
+
+# Webhook URLs for Discord channels
+webhooks:
+  reports: "" # Full URL for reports channel
+  anticheat: "" # Full URL for anti-cheat channel
 
 # Minecraft server display-name
 server-name: "" # Server name
@@ -11,10 +14,6 @@ staff-permission: "cheaty.staff"
 
 # Permission used to identify off-duty staff members
 off-duty-permission: "cheaty.off-duty"
-
-channels:
-  reports: "" # ID of channel where reports are sent
-  anticheat: "" # ID of channel where autocheat alerts are sent
 
 # What types of message should be enabled
 types:
@@ -44,7 +43,7 @@ prefix:
   autokill: ":mouse_three_button: "
   matrix: ":warning: "
   command: ""
-  
+
 # Cheat notify - Enables clickable and visually enhanced notifications for matrix violations.
 cheat-notify:
   enabled: true
@@ -52,7 +51,7 @@ cheat-notify:
   permission-node: matrix.notify
   # Alert prefix used to format notifications
   alert-prefix: "&f[&6AC&f]"
-  
+
 # Pings
 pings:
   enabled: true
