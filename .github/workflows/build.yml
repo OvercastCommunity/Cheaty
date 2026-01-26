@@ -6,33 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: '8'
+          java-version: '21'
+          distribution: 'temurin'
       - name: Build jar
         run: mvn --batch-mode --update-snapshots verify
       - name: Move generated jar file
         run: mv target/Cheaty-*.jar Cheaty.jar
       - name: Create Release
-        id: create_release
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main')
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: Cheaty-${{github.sha}}
-          release_name: Release ${{github.sha}}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
-        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Cheaty.jar
-          asset_name: Cheaty.jar
-          asset_content_type: application/java-archive
+          name: Release ${{github.sha}}
+          files: Cheaty.jar
