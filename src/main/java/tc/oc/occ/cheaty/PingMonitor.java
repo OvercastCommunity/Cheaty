@@ -13,7 +13,7 @@ import tc.oc.occ.idly.Idly;
 
 public class PingMonitor {
 
-  private Map<UUID, Map<UUID, Long>> reportsByPlayer = new HashMap<>();
+  private final Map<UUID, Map<UUID, Long>> reportsByPlayer = new HashMap<>();
 
   private final BotConfig config;
   private final DiscordBot discord;
@@ -37,7 +37,7 @@ public class PingMonitor {
         Bukkit.getOnlinePlayers().stream()
             .filter(p -> p.hasPermission(config.getStaffPermission()))
             .filter(p -> !p.hasPermission(config.getOffDutyPermission()))
-            .filter(p -> isNotIdle(p))
+            .filter(this::isNotIdle)
             .collect(Collectors.toList());
 
     return !staff.isEmpty();
@@ -51,11 +51,7 @@ public class PingMonitor {
     UUID reporterId = report.getSenderId();
     long reportTime = System.currentTimeMillis();
 
-    Map<UUID, Long> reports = reportsByPlayer.get(reportedId);
-    if (reports == null) {
-      reports = new HashMap<>();
-      reportsByPlayer.put(reportedId, reports);
-    }
+    Map<UUID, Long> reports = reportsByPlayer.computeIfAbsent(reportedId, k -> new HashMap<>());
 
     reports.put(reporterId, reportTime);
 
@@ -67,7 +63,7 @@ public class PingMonitor {
     if (reports != null) {
       int numReports = 0;
       for (long time : reports.values()) {
-        if ((reportTime - time) <= (config.getReportWindowMinutes() * 60 * 1000)) {
+        if ((reportTime - time) <= ((long) config.getReportWindowMinutes() * 60 * 1000)) {
           numReports++;
         }
       }
