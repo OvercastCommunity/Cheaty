@@ -135,7 +135,7 @@ public class DiscordBot {
 
     // Format ping message
     String pingMessage =
-        mentions.toString()
+        mentions
             + "\n`"
             + getUsername(report.getTargetId())
             + "` has been reported by **"
@@ -167,9 +167,9 @@ public class DiscordBot {
     };
   }
 
-  public static enum RelayType {
+  public enum RelayType {
     AUTOKILL,
     MATRIX,
-    COMMAND;
+    COMMAND
   }
 }
