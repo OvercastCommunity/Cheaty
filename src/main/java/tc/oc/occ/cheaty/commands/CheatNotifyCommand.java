@@ -14,7 +14,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import tc.oc.occ.cheaty.BotConfig;
@@ -39,7 +38,9 @@ public class CheatNotifyCommand extends BaseCommand {
   public void notify(CommandSender sender, String target, String message) {
 
     if (!config.isCheatNotifyEnabled()) {
-      sender.sendMessage(ChatColor.RED + "Cheat alerts are not enabled - Check the config.yml");
+      Audience.get(sender)
+          .sendMessage(
+              text("Cheat alerts are not enabled - Check the config.yml", NamedTextColor.RED));
       return;
     }
 

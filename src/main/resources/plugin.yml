@@ -4,4 +4,4 @@ main: ${project.bukkit.main}
 version: ${project.version} (git-${git.commit.id.abbrev})
 api-version: ${project.paper.api}
 author: ${project.author}
-softdepend: [PGM, AutoKiller, Idly]
+softdepend: [PGM, AutoKiller, Idly, GrimAC]

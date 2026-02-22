@@ -28,6 +28,18 @@
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <id>grimac-snapshots</id>
+            <url>https://repo.grim.ac/snapshots/</url>
+        </repository>
+        <repository>
+            <id>scarsz</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io/</url>
+        </repository>
     </repositories>
 
     <!-- Dependencies -->
@@ -75,9 +87,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.21-R0.2</version>
+            <groupId>ac.grim.grimac</groupId>
+            <artifactId>GrimAPI</artifactId>
+            <version>1.2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Just needed a non-local copy of Grim to build against  -->
+        <dependency>
+            <groupId>com.github.GrimAnticheat</groupId>
+            <artifactId>Grim</artifactId>
+            <version>build-number-3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
