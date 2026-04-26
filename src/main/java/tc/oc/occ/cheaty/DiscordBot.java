@@ -92,9 +92,9 @@ public class DiscordBot {
     String formatted =
         config
             .getReportFormat()
-            .replace("%reporter%", reporter)
-            .replace("%reported%", reported)
-            .replace("%reason%", reason);
+            .replace("%reporter%", sanitizeDiscordInput(reporter))
+            .replace("%reported%", sanitizeDiscordInput(reported))
+            .replace("%reason%", sanitizeDiscordInput(reason));
     sendMessage(config.getReportPrefix() + formatted, true);
 
     if (config.isPingEnabled()) {
@@ -104,13 +104,14 @@ public class DiscordBot {
 
   public void sendRelay(String message, RelayType type) {
     if (!config.isRelayCommandEnabled()) return;
-    String formatted = config.getRelayFormat().replace("%message%", message);
+    String formatted = config.getRelayFormat().replace("%message%", sanitizeDiscordInput(message));
     sendMessage(getPrefix(type) + formatted, false);
   }
 
   public void sendAutoKiller(AutoKillCheatEvent event) {
     if (!config.isAutoKillerEnabled()) return;
-    String formatted = config.getRelayFormat().replace("%message%", event.getAlert());
+    String formatted =
+        config.getRelayFormat().replace("%message%", sanitizeDiscordInput(event.getAlert()));
     sendMessage(getPrefix(RelayType.AUTOKILL) + formatted, false);
   }
 
@@ -154,9 +155,23 @@ public class DiscordBot {
     text = ChatColor.translateAlternateColorCodes('&', text);
     text = ChatColor.stripColor(text);
     text = text.replace("@", "");
-    text = text.replace("_", "\\_");
-    text = text.replace("*", "\\*");
     return text.trim();
+  }
+
+  private String sanitizeDiscordInput(String text) {
+    if (text == null) return "";
+
+    text = ChatColor.translateAlternateColorCodes('&', text);
+    text = ChatColor.stripColor(text);
+    text = text.replace("@", "");
+    text = text.replace("\\", "\\\\");
+    text = text.replace("*", "\\*");
+    text = text.replace("_", "\\_");
+    text = text.replace("`", "\\`");
+    text = text.replace("~", "\\~");
+    text = text.replace("|", "\\|");
+    text = text.replace(">", "\\>");
+    return text;
   }
 
   public String getPrefix(RelayType type) {
